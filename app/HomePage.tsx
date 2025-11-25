@@ -4,7 +4,7 @@ import { Header } from "./components/Header";
 import { FilterSidebar, type FilterState } from "./components/FilterSidebar";
 import { RacketCard } from "./components/RacketCard";
 import { RacketDetail } from "./components/RacketDetail";
-import { RacketRow } from "../lib/rackets";
+import { RacketRow } from "./lib/rackets";
 import { Input } from "./components/ui/input";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "./components/ui/button";
@@ -23,7 +23,7 @@ export default function HomePage({ rackets }: Props) {
     const [filters, setFilters] = useState<FilterState>({
         brands: [],
         maxPrice: 250000,
-        weights: [],
+        weightCategory: [],
         balances: [],
         stiffness: []
     });
@@ -34,30 +34,45 @@ export default function HomePage({ rackets }: Props) {
         return rackets.filter((racket) => {
             const search = searchQuery.toLowerCase();
 
+            //이름
             const matchesName = racket.name?.toLowerCase().includes(search);
+
 
             const tagNames = racket.racket_tags?.map(
                 rt => rt.tags?.name ?? ""
             ).filter(Boolean);
 
+            //태그
             const matchesTag = tagNames.some(t =>
                 t.toLowerCase().includes(search)
             );
 
+            //시리즈
             const matchesSeries = racket.series?.name
                 ?.toLowerCase()
                 .includes(search);
 
+            //브랜드
             const matchesBrand =
                 filters.brands.length === 0 ||
                 filters.brands.includes(racket.brands?.name ?? "");
 
+            //가격
             const matchesPrice =
                 !racket.price || racket.price <= filters.maxPrice;
 
+            //무게 분류
+            const matchesWeightCategory =
+                filters.weightCategory.length === 0 ||
+                filters.weightCategory.includes(racket.weightCategory ?? "");
+
+            //밸런스 타입
+            const matchesBalanceType =
+                filters.balances.length === 0 ||
+                filters.balances.includes(racket.balanceType ?? "");
+
             return (matchesName || matchesTag || matchesSeries) &&
-                matchesBrand &&
-                matchesPrice;
+                matchesBrand && matchesPrice && matchesWeightCategory && matchesBalanceType;
         });
     }, [rackets, searchQuery, filters]);
 
@@ -67,6 +82,8 @@ export default function HomePage({ rackets }: Props) {
         setDetailOpen(true);
     };
 
+    console.log(rackets);
+
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
             <Header />
@@ -75,7 +92,7 @@ export default function HomePage({ rackets }: Props) {
                 {/* 메인 타이틀과 검색창 */}
                 <div className="max-w-2xl mx-auto mb-12 text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
                     <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
-                        거기 너, 인생 <span className="text-blue-600">라켓</span>을 찾아라
+                        인생 <span className="text-blue-600">라켓</span>을 찾아라
                     </h1>
 
                     {/* 검색박스 */}
@@ -150,9 +167,9 @@ export default function HomePage({ rackets }: Props) {
                                 <p className="text-slate-500 max-w-xs mx-auto mb-6">다른 조건으로 검색해보세요.</p>
                                 <Button
                                     variant="outline"
-                                    className="text-blue-600 border-blue-100 hover:bg-blue-50"
+                                    className="text-blue-600 border-blue-200 hover:bg-blue-50 bg-white"
                                     onClick={() => {
-                                        setFilters({ brands: [], maxPrice: 300, weights: [], balances: [], stiffness: [] });
+                                        setFilters({ brands: [], maxPrice: 250000, weights: [], balances: [], stiffness: [] });
                                         setSearchQuery("");
                                     }}
                                 >

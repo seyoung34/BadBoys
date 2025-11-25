@@ -1,5 +1,5 @@
 // app/page.tsx
-import { fetchRackets } from "@/lib/rackets";
+import { fetchRackets } from "@/app/lib/rackets";
 import HomePage from "./HomePage";
 
 

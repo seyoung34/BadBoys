@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { RacketRow } from "@/lib/rackets";
+import type { RacketRow } from "@/app/lib/rackets";
 
 type Props = {
     rackets: RacketRow[];

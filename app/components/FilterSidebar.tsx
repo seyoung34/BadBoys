@@ -6,13 +6,13 @@ import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { X } from "lucide-react";
-import { RacketRow } from "../../lib/rackets";
+import { RacketRow } from "../lib/rackets";
 import { useMemo } from "react";
 
 export interface FilterState {
   brands: string[];
   maxPrice: number;
-  weights: string[]; // weightCategory 사용
+  weightCategory: string[]; // weightCategory 사용
   balances: string[];
   stiffness: number[]; // shaft 값 기반
 }
@@ -20,7 +20,7 @@ export interface FilterState {
 interface FilterSidebarProps {
   filters: FilterState;
   setFilters: (filters: FilterState) => void;
-  rackets: RacketRow[];     // ★ rackets 전달받도록 수정
+  rackets: RacketRow[];
   onClose?: () => void;
   className?: string;
 }
@@ -84,7 +84,7 @@ export function FilterSidebar({ filters, setFilters, rackets, onClose, className
     setFilters({
       brands: [],
       maxPrice: 500000,
-      weights: [],
+      weightCategory: [],
       balances: [],
       stiffness: []
     });
@@ -142,8 +142,8 @@ export function FilterSidebar({ filters, setFilters, rackets, onClose, className
         {weightOptions.map(weight => (
           <button
             key={weight}
-            onClick={() => toggleArrayFilter("weights", weight)}
-            className={`px-3 py-1 text-xs rounded-full border ${filters.weights.includes(weight)
+            onClick={() => toggleArrayFilter("weightCategory", weight)}
+            className={`px-3 py-1 text-xs rounded-full border ${filters.weightCategory.includes(weight)
               ? "bg-blue-600 text-white border-blue-600"
               : "bg-white text-slate-600 border-slate-200"
               }`}

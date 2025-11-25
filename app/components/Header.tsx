@@ -21,7 +21,7 @@ export function Header({ onMenuClick }: { onMenuClick?: () => void }) {
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
             </div> */}
-            <span className="font-bold text-xl text-slate-900 tracking-tight">Racket<span className="text-blue-600">Boys</span></span>
+            <span className="font-bold text-xl text-slate-900 tracking-tight">Bad<span className="text-blue-600">boys</span></span>
           </div>
         </div>
 

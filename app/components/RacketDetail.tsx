@@ -1,5 +1,5 @@
 
-import type { RacketRow } from "../../lib/rackets";
+import type { RacketRow } from "../lib/rackets";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Badge } from "./ui/badge";
 // import { Button } from "./ui/button";

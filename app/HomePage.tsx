@@ -22,7 +22,7 @@ export default function HomePage({ rackets }: Props) {
     const [sortOption, setSortOption] = useState("featured");
     const [filters, setFilters] = useState<FilterState>({
         brands: [],
-        maxPrice: 250000,
+        maxPrice: 500000,
         weightCategory: [],
         balances: [],
         stiffness: []
@@ -169,7 +169,7 @@ export default function HomePage({ rackets }: Props) {
                                     variant="outline"
                                     className="text-blue-600 border-blue-200 hover:bg-blue-50 bg-white"
                                     onClick={() => {
-                                        setFilters({ brands: [], maxPrice: 250000, weights: [], balances: [], stiffness: [] });
+                                        setFilters({ brands: [], maxPrice: 500000, weightCategory: [], balances: [], stiffness: [] });
                                         setSearchQuery("");
                                     }}
                                 >

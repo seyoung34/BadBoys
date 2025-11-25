@@ -52,7 +52,7 @@ export function RacketDetail({ racket, open, onOpenChange }: RacketDetailProps) 
               <div className="space-y-3 mb-8">
                 <div className="flex justify-between items-center py-2 border-b border-slate-100">
                   <span className="text-sm text-slate-500">무게</span>
-                  <span className="font-semibold text-slate-900 text-sm">{racket.weight}</span>
+                  <span className="font-semibold text-slate-900 text-sm">{racket.weightCategory}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-slate-100">
                   <span className="text-sm text-slate-500">밸런스</span>

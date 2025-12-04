@@ -1,38 +1,50 @@
+// ./lib/types.ts
+
 export type RacketTag = {
+    id: number;
     name: string;
     category: string | null;
 };
 
-export type RacketMainImage = {
-    id: number | null;
-    url: string | null;
+export type RacketImage = {
+    id: number;
+    url: string;
     alt: string | null;
     orderIndex: number | null;
-    isMain: boolean | null;
+    isMain: boolean;
+};
+
+export type RacketVariant = {
+    id: number;
+    weight: number | null;
+    weightCategory: string | null;
+    balanceType: string | null;
+    shaft: number | null;
+    gripSize: string | null;
+    maxTension: number | null;
+    price: number | null;
+    color: string | null;
+    isDefault: boolean;
 };
 
 export type RacketRow = {
     id: number;
     name: string;
-    weight: number | null;
-    weightCategory: string | null;
-    balanceType: string | null;
-    length: number | null;
-    maxTension: number | null;
-    playStyle: string | null;
-    price: number | null;
-    gripSize: string | null;
-    shaft: number | null;
-    linkURL: string | null;
     note: string | null;
 
     brandName: string | null;
     seriesName: string | null;
 
-    mainImage: RacketMainImage | null;
+    variants: RacketVariant[];
+
+    mainImage: RacketImage | null;
+    images?: RacketImage[];
 
     tags: RacketTag[];
 };
+
+
+
 
 export type RacketViewRow = {
     id: number;

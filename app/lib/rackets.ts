@@ -1,15 +1,16 @@
+// ./lib/rackets.ts
 import { supabase } from "./supabaseClient";
 import { toCamel } from "./toCamel";
 import {
   RacketRow,
-  RacketMainImage,
-  RacketTag,
-  RacketViewCamelRow,
+  RacketVariant,
+  RacketImage,
+  RacketTag
 } from "./types";
 
 export async function fetchRackets(): Promise<RacketRow[]> {
   const { data, error } = await supabase
-    .from("rackets_with_main_image_and_tags")
+    .from("racket_full_view")
     .select("*")
     .order("id", { ascending: true });
 
@@ -18,40 +19,40 @@ export async function fetchRackets(): Promise<RacketRow[]> {
     return [];
   }
 
-  const camel = toCamel(data) as RacketViewCamelRow[];
+  const camel = toCamel(data) as Record<string, unknown>[];
 
-  return camel.map((r): RacketRow => {
-    const mainImage: RacketMainImage | null =
-      r.mainImageId !== null && r.mainImageUrl !== null
-        ? {
-          id: r.mainImageId,
-          url: r.mainImageUrl,
-          alt: r.mainImageAlt,
-          orderIndex: r.mainImageOrderIndex,
-          isMain: r.mainImageIsMain,
-        }
-        : null;
+  return camel.map((r) => {
+    // 안전하게 타입 캐스팅
+    const variants = Array.isArray(r.variants)
+      ? (r.variants as RacketVariant[])
+      : [];
 
-    return {
-      id: r.id,
-      name: r.name,
-      weight: r.weight,
-      weightCategory: r.weightCategory,
-      balanceType: r.balanceType,
-      length: r.length,
-      maxTension: r.maxTension,
-      playStyle: r.playStyle,
-      price: r.price,
-      gripSize: r.gripSize,
-      shaft: r.shaft,
-      linkURL: r.linkURL,
-      note: r.note,
+    const tags = Array.isArray(r.tags)
+      ? (r.tags as RacketTag[])
+      : [];
 
-      brandName: r.brandName,
-      seriesName: r.seriesName,
+    const mainImage = r.mainImage
+      ? (r.mainImage as RacketImage)
+      : null;
 
+    const images = Array.isArray(r.images)
+      ? (r.images as RacketImage[])
+      : undefined; // optional
+
+    const row: RacketRow = {
+      id: r.id as number,
+      name: r.name as string,
+      note: (r.note as string) ?? null,
+
+      brandName: (r.brandName as string) ?? null,
+      seriesName: (r.seriesName as string) ?? null,
+
+      variants,
       mainImage,
-      tags: r.tags ?? [],
+      images,
+      tags
     };
+
+    return row;
   });
 }

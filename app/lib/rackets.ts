@@ -1,72 +1,57 @@
-// lib/rackets.ts
 import { supabase } from "./supabaseClient";
-
-export type RacketRow = {
-  id: number;
-  name: string;
-  weight: number | null;
-  weightCategory: string | null;
-  balanceType: string | null;
-  length: number | null;
-  maxTension: number | null;
-  playStyle: string | null;
-  price: number | null;
-  gripSize: string | null;
-  shaft: number | null;
-  linkURL: string | null;
-  note: string | null;
-  brands: {
-    name: string;
-  } | null;
-  series: {
-    name: string;
-  } | null;
-  racket_tags: {
-    tags: {
-      name: string;
-      category: string | null;
-    } | null;
-  }[];
-};
+import { toCamel } from "./toCamel";
+import {
+  RacketRow,
+  RacketMainImage,
+  RacketTag,
+  RacketViewCamelRow,
+} from "./types";
 
 export async function fetchRackets(): Promise<RacketRow[]> {
   const { data, error } = await supabase
-    .from("rackets")
-    .select(`
-      id,
-      name,
-      weight,
-      weightCategory,
-      balanceType,
-      length,
-      maxTension,
-      playStyle,
-      price,
-      gripSize,
-      shaft,
-      linkURL,
-      note,
-      brands (
-        name
-      ),
-      series (
-        name
-      ),
-      racket_tags (
-        tags (
-          name,
-          category
-        )
-      )
-    `)
+    .from("rackets_with_main_image_and_tags")
+    .select("*")
     .order("id", { ascending: true });
 
   if (error) {
-    // 실제 서비스라면 로깅 필요
     console.error("fetchRackets error:", error);
     return [];
   }
 
-  // 타입 단언
-  return (data ?? []) as unknown as RacketRow[];
+  const camel = toCamel(data) as RacketViewCamelRow[];
+
+  return camel.map((r): RacketRow => {
+    const mainImage: RacketMainImage | null =
+      r.mainImageId !== null && r.mainImageUrl !== null
+        ? {
+          id: r.mainImageId,
+          url: r.mainImageUrl,
+          alt: r.mainImageAlt,
+          orderIndex: r.mainImageOrderIndex,
+          isMain: r.mainImageIsMain,
+        }
+        : null;
+
+    return {
+      id: r.id,
+      name: r.name,
+      weight: r.weight,
+      weightCategory: r.weightCategory,
+      balanceType: r.balanceType,
+      length: r.length,
+      maxTension: r.maxTension,
+      playStyle: r.playStyle,
+      price: r.price,
+      gripSize: r.gripSize,
+      shaft: r.shaft,
+      linkURL: r.linkURL,
+      note: r.note,
+
+      brandName: r.brandName,
+      seriesName: r.seriesName,
+
+      mainImage,
+      tags: r.tags ?? [],
+    };
+  });
 }

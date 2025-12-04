@@ -4,7 +4,7 @@ import { Header } from "./components/Header";
 import { FilterSidebar, type FilterState } from "./components/FilterSidebar";
 import { RacketCard } from "./components/RacketCard";
 import { RacketDetail } from "./components/RacketDetail";
-import { RacketRow } from "./lib/rackets";
+import { RacketRow } from "./lib/types";
 import { Input } from "./components/ui/input";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "./components/ui/button";
@@ -38,24 +38,25 @@ export default function HomePage({ rackets }: Props) {
             const matchesName = racket.name?.toLowerCase().includes(search);
 
 
-            const tagNames = racket.racket_tags?.map(
-                rt => rt.tags?.name ?? ""
-            ).filter(Boolean);
-
             //태그
+            const tagNames = racket.tags?.map(
+                rt => rt?.name ?? ""
+            ).filter((name): name is string => Boolean(name)) ?? [];
+
+            //맞는 태그가 있는지 없는지 boolean 반환
             const matchesTag = tagNames.some(t =>
                 t.toLowerCase().includes(search)
             );
 
             //시리즈
-            const matchesSeries = racket.series?.name
+            const matchesSeries = racket.seriesName
                 ?.toLowerCase()
                 .includes(search);
 
             //브랜드
             const matchesBrand =
                 filters.brands.length === 0 ||
-                filters.brands.includes(racket.brands?.name ?? "");
+                filters.brands.includes(racket.brandName ?? "");
 
             //가격
             const matchesPrice =

@@ -1,5 +1,5 @@
 
-import type { RacketRow } from "../lib/rackets";
+import type { RacketRow } from "../lib/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Badge } from "./ui/badge";
 // import { Button } from "./ui/button";
@@ -16,7 +16,7 @@ export function RacketDetail({ racket, open, onOpenChange }: RacketDetailProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl p-0 overflow-hidden bg-white gap-0">
+      <DialogContent className="max-w-5xl p-0 overflow-hidden bg-white gap-0">
         <div className="grid md:grid-cols-2 gap-0">
 
           <div className="bg-slate-50 p-4 flex items-center justify-center relative">
@@ -35,12 +35,12 @@ export function RacketDetail({ racket, open, onOpenChange }: RacketDetailProps) 
           <div className="p-8 flex flex-col h-full">
             <div className="mb-auto">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">{racket.brands?.name}</span>
+                <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">{racket.brandName}</span>
               </div>
               <DialogHeader className="mb-4 text-left">
                 <DialogTitle className="text-3xl font-bold text-slate-900">{racket.name}</DialogTitle>
                 <DialogDescription className="text-lg font-medium text-slate-500 hidden">
-                  {racket.series?.name}
+                  {racket.seriesName}
                 </DialogDescription>
               </DialogHeader>
 
@@ -69,9 +69,9 @@ export function RacketDetail({ racket, open, onOpenChange }: RacketDetailProps) 
               </div>
 
               <div className="flex flex-wrap gap-2 mb-6">
-                {racket.racket_tags.map(tag => (
-                  <Badge key={tag.tags?.name} variant="secondary" className="text-xs font-normal bg-slate-100 text-slate-600">
-                    <Check className="w-3 h-3 mr-1 text-blue-500" /> {tag.tags?.name}
+                {racket.tags.map(tag => (
+                  <Badge key={tag.name} variant="secondary" className="text-xs font-normal bg-slate-100 text-slate-600">
+                    <Check className="w-3 h-3 mr-1 text-blue-500" /> {tag.name}
                   </Badge>
                 ))}
               </div>

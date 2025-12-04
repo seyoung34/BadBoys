@@ -6,8 +6,8 @@ import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { X } from "lucide-react";
-import { RacketRow } from "../lib/rackets";
 import { useMemo } from "react";
+import { RacketRow } from "../lib/types";
 
 export interface FilterState {
   brands: string[];
@@ -31,7 +31,7 @@ export function FilterSidebar({ filters, setFilters, rackets, onClose, className
   const brandOptions = useMemo(
     () => Array.from(
       new Set(
-        rackets.map(r => r.brands?.name).filter((v): v is string => Boolean(v))
+        rackets.map(r => r.brandName).filter((v): v is string => Boolean(v))
       )
     ),
     [rackets]

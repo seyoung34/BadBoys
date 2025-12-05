@@ -63,7 +63,7 @@ export async function processRacketJson(input: RacketCrawlInput): Promise<Normal
 
     const variant = {
         weight: extractNumber(input.weight),
-        weightCategory: extractWeightCategory(input.weight ?? input.weightGrip),
+        weightCategory: extractWeightCategory(input.weight) ?? extractWeightCategory(input.weightGrip),
         balanceType: input.balance ?? null,
         shaft: convertFlexToScale(input.shaftFlex),
         gripSize: extractGripSize(input.gripSize),

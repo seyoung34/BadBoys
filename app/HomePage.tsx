@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 import { useState, useMemo } from "react";
 import { Header } from "./components/Header";
 import { FilterSidebar, type FilterState } from "./components/FilterSidebar";
@@ -11,8 +12,6 @@ import { Button } from "./components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./components/ui/select";
 
-
-
 type Props = {
     rackets: RacketRow[];
 };
@@ -23,59 +22,123 @@ export default function HomePage({ rackets }: Props) {
     const [filters, setFilters] = useState<FilterState>({
         brands: [],
         maxPrice: 500000,
-        weightCategory: [],
-        balances: [],
+        weightCategories: [],
+        balanceTypes: [],
         stiffness: []
     });
+
     const [selectedRacket, setSelectedRacket] = useState<RacketRow | null>(null);
     const [detailOpen, setDetailOpen] = useState(false);
 
+    // ----------------------------------------------------------
+    //                 필터링 로직
+    // ----------------------------------------------------------
     const filteredRackets = useMemo(() => {
-        return rackets.filter((racket) => {
-            const search = searchQuery.toLowerCase();
+        const search = searchQuery.toLowerCase();
 
-            //이름
-            const matchesName = racket.name?.toLowerCase().includes(search);
+        return rackets.filter((r) => {
+            // =============================================
+            // 검색: 이름, 태그, 시리즈
+            // =============================================
 
+            const matchesName = r.name?.toLowerCase().includes(search);
 
-            //태그
-            const tagNames = racket.tags?.map(
-                rt => rt?.name ?? ""
-            ).filter((name): name is string => Boolean(name)) ?? [];
+            const tagNames =
+                r.tags
+                    ?.map((t) => t?.name ?? "")
+                    .filter((n): n is string => Boolean(n)) ?? [];
 
-            //맞는 태그가 있는지 없는지 boolean 반환
-            const matchesTag = tagNames.some(t =>
+            const matchesTag = tagNames.some((t) =>
                 t.toLowerCase().includes(search)
             );
 
-            //시리즈
-            const matchesSeries = racket.seriesName
+            const matchesSeries = r.seriesName
                 ?.toLowerCase()
                 .includes(search);
 
-            //브랜드
+            // 검색 문자열 기반 조건
+            const matchesSearch = matchesName || matchesTag || matchesSeries;
+
+            // =============================================
+            // 브랜드 필터
+            // =============================================
             const matchesBrand =
                 filters.brands.length === 0 ||
-                filters.brands.includes(racket.brandName ?? "");
+                filters.brands.includes(r.brandName ?? "");
 
-            //가격
-            const matchesPrice =
-                !racket.price || racket.price <= filters.maxPrice;
+            // =============================================
+            // 가격 필터 (variant.price 중 하나라도 조건 충족)
+            // =============================================
+            const matchesPrice = r.variants.some(
+                (v) => (v.price ?? Infinity) <= filters.maxPrice
+            );
 
-            //무게 분류
+            // =============================================
+            // 무게 필터 (variants 기반)
+            // =============================================
             const matchesWeightCategory =
-                filters.weightCategory.length === 0 ||
-                filters.weightCategory.includes(racket.weightCategory ?? "");
+                filters.weightCategories.length === 0 ||
+                r.variants.some((v) =>
+                    filters.weightCategories.includes(v.weightCategory ?? "")
+                );
 
-            //밸런스 타입
-            const matchesBalanceType =
-                filters.balances.length === 0 ||
-                filters.balances.includes(racket.balanceType ?? "");
+            // =============================================
+            // 밸런스 필터
+            // =============================================
+            const matchesBalance =
+                filters.balanceTypes.length === 0 ||
+                r.variants.some((v) =>
+                    filters.balanceTypes.includes(v.balanceType ?? "")
+                );
 
-            return (matchesName || matchesTag || matchesSeries) &&
-                matchesBrand && matchesPrice && matchesWeightCategory && matchesBalanceType;
+            // =============================================
+            // 샤프트 강성 필터 (숫자 비교)
+            // =============================================
+            const matchesStiffness =
+                filters.stiffness.length === 0 ||
+                r.variants.some((v) =>
+                    filters.stiffness.includes(v.shaft ?? -1)
+                );
+
+            return (
+                matchesSearch &&
+                matchesBrand &&
+                matchesPrice &&
+                matchesWeightCategory &&
+                matchesBalance &&
+                matchesStiffness
+            );
         });
     }, [rackets, searchQuery, filters]);
+
+    // ----------------------------------------------------------
+    //                 정렬 로직
+    // ----------------------------------------------------------
+    const sortedRackets = useMemo(() => {
+        const list = [...filteredRackets];
+
+        switch (sortOption) {
+            case "price-asc":
+                return list.sort((a, b) => {
+                    const pa = a.variants[0]?.price ?? Infinity;
+                    const pb = b.variants[0]?.price ?? Infinity;
+                    return pa - pb;
+                });
+
+            case "price-desc":
+                return list.sort((a, b) => {
+                    const pa = a.variants[0]?.price ?? 0;
+                    const pb = b.variants[0]?.price ?? 0;
+                    return pb - pa;
+                });
+
+            case "name-asc":
+                return list.sort((a, b) => a.name.localeCompare(b.name));
+
+            default:
+                return list;
+        }
+    }, [filteredRackets, sortOption]);
 
 
     const handleRacketClick = (racket: RacketRow) => {
@@ -83,62 +146,68 @@ export default function HomePage({ rackets }: Props) {
         setDetailOpen(true);
     };
 
-    console.log(rackets);
 
+    // ----------------------------------------------------------
+    //                 렌더링
+    // ----------------------------------------------------------
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-20">
             <Header />
 
             <main className="container mx-auto px-4 py-8">
-                {/* 메인 타이틀과 검색창 */}
-                <div className="max-w-2xl mx-auto mb-12 text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
+                {/* 타이틀 + 검색 */}
+                <div className="max-w-2xl mx-auto mb-12 text-center space-y-4">
+                    <h1 className="text-4xl md:text-5xl font-extrabold">
                         인생 <span className="text-blue-600">라켓</span>을 찾아라
                     </h1>
 
-                    {/* 검색박스 */}
                     <div className="relative mt-8 max-w-lg mx-auto">
-                        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                         <Input
-                            className="pl-12 h-14 text-lg bg-white border-slate-200 shadow-lg shadow-slate-200/50 rounded-full focus-visible:ring-blue-500 focus-visible:border-blue-500 transition-shadow hover:shadow-xl"
-                            placeholder="이름, 스타일 등으로 검색해보세요"
+                            className="pl-12 h-14 rounded-full"
+                            placeholder="이름, 태그, 시리즈 등을 검색하세요"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
                 </div>
 
-                {/* 메인 내용 */}
                 <div className="flex flex-col md:flex-row gap-8 items-start">
-
-                    {/* 사이드바 (Desktop) */}
-                    <aside className="hidden md:block w-64 flex-shrink-0 sticky top-24">
-                        <FilterSidebar filters={filters} setFilters={setFilters} rackets={rackets} />
+                    {/* 데스크톱 필터 */}
+                    <aside className="hidden md:block w-64">
+                        <FilterSidebar
+                            filters={filters}
+                            setFilters={setFilters}
+                            rackets={rackets}
+                        />
                     </aside>
 
-                    {/* 모바일 Filter Trigger */}
+                    {/* 모바일 필터 */}
                     <div className="md:hidden w-full mb-4">
                         <Sheet>
                             <SheetTrigger asChild>
-                                <Button variant="outline" className="w-full flex gap-2 h-12 border-slate-200 bg-white text-slate-700 shadow-sm">
-                                    <SlidersHorizontal className="h-4 w-4" /> Filter Results
+                                <Button variant="outline" className="w-full h-12">
+                                    <SlidersHorizontal className="mr-2" />
+                                    필터
                                 </Button>
                             </SheetTrigger>
-                            <SheetContent side="left" className="w-[300px] sm:w-[350px] overflow-y-auto bg-white">
-                                <div className="pt-6">
-                                    <FilterSidebar filters={filters} setFilters={setFilters} rackets={rackets} className="border-none shadow-none p-0" />
-                                </div>
+                            <SheetContent side="left" className="w-[320px]">
+                                <FilterSidebar
+                                    filters={filters}
+                                    setFilters={setFilters}
+                                    rackets={rackets}
+                                />
                             </SheetContent>
                         </Sheet>
                     </div>
 
                     {/* 결과 Grid */}
-                    <div className="flex-1 w-full">
+                    <div className="flex-1">
                         <div className="mb-6 flex justify-between items-center">
-                            <p className="text-slate-500 font-medium">
-                                결과  <span className="text-slate-900 font-bold">{filteredRackets.length}</span> 개
+                            <p className="text-slate-500">
+                                결과 <span className="text-slate-900 font-bold">{sortedRackets.length}</span> 개
                             </p>
-                            {/* 정렬 */}
+
                             <Select value={sortOption} onValueChange={setSortOption}>
                                 <SelectTrigger className="w-[180px] bg-white border-slate-200">
                                     <SelectValue placeholder="Sort by" />
@@ -152,29 +221,32 @@ export default function HomePage({ rackets }: Props) {
                             </Select>
                         </div>
 
-                        {/* 검색 결과 아이템들 */}
-                        {filteredRackets.length > 0 ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6 animate-in fade-in zoom-in-95 duration-500">
-                                {filteredRackets.map(racket => (
-                                    <RacketCard key={racket.id} racket={racket} onClick={handleRacketClick} />
+                        {sortedRackets.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {sortedRackets.map((r) => (
+                                    <RacketCard key={r.id} racket={r} onClick={handleRacketClick} />
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-20 bg-white rounded-xl border border-dashed border-slate-200">
-                                <div className="mx-auto w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                                    <Search className="h-8 w-8 text-slate-300" />
-                                </div>
-                                <h3 className="text-lg font-medium text-slate-900 mb-2">조건에 맞는 결과가 없어요</h3>
-                                <p className="text-slate-500 max-w-xs mx-auto mb-6">다른 조건으로 검색해보세요.</p>
+                            <div className="text-center py-20 border rounded-xl bg-white">
+                                <Search className="mx-auto text-slate-300 w-10 h-10" />
+                                <h3 className="mt-4 text-lg font-medium">조건에 맞는 결과가 없습니다</h3>
+
                                 <Button
                                     variant="outline"
-                                    className="text-blue-600 border-blue-200 hover:bg-blue-50 bg-white"
+                                    className="mt-6"
                                     onClick={() => {
-                                        setFilters({ brands: [], maxPrice: 500000, weightCategory: [], balances: [], stiffness: [] });
+                                        setFilters({
+                                            brands: [],
+                                            maxPrice: 500000,
+                                            weightCategories: [],
+                                            balanceTypes: [],
+                                            stiffness: []
+                                        });
                                         setSearchQuery("");
                                     }}
                                 >
-                                    조건 & 검색 초기화
+                                    초기화
                                 </Button>
                             </div>
                         )}

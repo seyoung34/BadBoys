@@ -45,69 +45,47 @@ export type RacketRow = {
 
 
 
+export type RacketCrawlInput = {
+    /** 필수 필드 */
+    name: string;           // 라켓 이름
+    brand: string;          // 제조사
+    url: string;            // 상품 페이지 URL
 
-export type RacketViewRow = {
-    id: number;
-    name: string;
-    weight: number | null;
-    weight_category: string | null;
-    balance_type: string | null;
-    length: number | null;
-    max_tension: number | null;
-    play_style: string | null;
-    price: number | null;
-    grip_size: string | null;
-    shaft: number | null;
-    link_url: string | null;
-    note: string | null;
+    /** 선택 필드 – 어떤 형식이든 허용 */
+    series?: string | null;
+    weight?: string | null;
+    weightGrip?: string | null;
 
-    brand_id: number | null;
-    brand_name: string | null;
+    balance?: string | null;
+    shaftFlex?: string | null;
+    shaftMaterial?: string | null;
+    frameMaterial?: string | null;
 
-    series_id: number | null;
-    series_name: string | null;
+    maxTension?: string | null;
+    length?: string | null;
+    gripSize?: string | null;
+    color?: string | null;
+    price?: string | null;
 
-    main_image_id: number | null;
-    main_image_url: string | null;
-    main_image_alt: string | null;
-    main_image_order_index: number | null;
-    main_image_is_main: boolean | null;
+    /** 전체 스펙 블록 (HTML 원문일 수도 있음) */
+    rawSpec?: string | null;
 
-    tags: {
-        name: string;
-        category: string | null;
-    }[];
+    /** 파싱용 기타 필드 (계속 확장 가능) */
+    extra?: Record<string, string | null>;
+
+    /** 크롤링 시각 */
+    crawledAt: string;
 };
 
-export type RacketViewCamelRow = {
-    id: number;
+export type NormalizedRacketInput = {
     name: string;
-    weight: number | null;
-    weightCategory: string | null;
-    balanceType: string | null;
-    length: number | null;
-    maxTension: number | null;
-    playStyle: string | null;
-    price: number | null;
-    gripSize: string | null;
-    shaft: number | null;
-    linkURL: string | null;
-    note: string | null;
-
-    brandId: number | null;
-    brandName: string | null;
-
-    seriesId: number | null;
+    brandName: string;
     seriesName: string | null;
-
-    mainImageId: number | null;
-    mainImageUrl: string | null;
-    mainImageAlt: string | null;
-    mainImageOrderIndex: number | null;
-    mainImageIsMain: boolean | null;
-
-    tags: {
-        name: string;
-        category: string | null;
-    }[];
+    note: string | null;
+    variants: Omit<RacketVariant, "id">[];
 };
+
+
+
+
+

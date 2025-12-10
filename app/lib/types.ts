@@ -8,7 +8,7 @@ export type RacketTag = {
 
 export type RacketImage = {
     id: number;
-    url: string;
+    linkURL: string;
     alt: string | null;
     orderIndex: number | null;
     isMain: boolean;
@@ -47,25 +47,26 @@ export type RacketRow = {
 //json형태로 db에 올리는 타입
 export type RacketCrawlInput = {
     /** 필수 필드 */
-    name: string;           // 라켓 이름
-    brand: string;          // 제조사
-    url: string;            // 상품 페이지 URL
+    brand: string;
+    name: string;
 
     /** 선택 필드 – 어떤 형식이든 허용 */
     series?: string | null;
     weight?: string | null;
-    weightGrip?: string | null;
+    weightCategory?: string | null;
 
-    balance?: string | null;
-    shaftFlex?: string | null;
+    balanceType?: string | null;
+    length?: string | null;
+    maxTension?: string | null;
+    playStyle?: string | null;
+    price?: string | null;
+    gripSize?: string | null;
+    shaft?: string | null;
+    linkURL: string;
+    color?: string | null;
+
     shaftMaterial?: string | null;
     frameMaterial?: string | null;
-
-    maxTension?: string | null;
-    length?: string | null;
-    gripSize?: string | null;
-    color?: string | null;
-    price?: string | null;
 
     /** 전체 스펙 블록 (HTML 원문일 수도 있음) */
     rawSpec?: string | null;

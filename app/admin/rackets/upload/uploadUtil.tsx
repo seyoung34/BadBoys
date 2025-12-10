@@ -116,6 +116,21 @@ async function upsertVariants(
     racketId: number,
     variants: NormalizedRacketInput["variants"]
 ): Promise<void> {
+
+    // 1️⃣ 기존 default 해제
+    const { error: clearError } = await supabase
+        .from("racket_variants")
+        .update({ is_default: false })
+        .eq("racket_id", racketId)
+        .eq("is_default", true);
+
+    if (clearError) {
+        throw new Error(
+            `[id: ${racketId}] Failed to clear default variant: ${clearError.message}`
+        );
+    }
+
+
     const rows = variants.map(v => ({
         racket_id: racketId,
         weight: v.weight,
@@ -133,7 +148,7 @@ async function upsertVariants(
         .from("racket_variants")
         .upsert(rows, { onConflict: "racket_id, weight_category, color, grip_size, balance_type, shaft" });
 
-    if (error) throw new Error("Variant upsert failed: " + error.message);
+    if (error) throw new Error("[id : " + racketId + "] Variant upsert failed: " + error.message);
 }
 
 // 태그는 추후에

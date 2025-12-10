@@ -44,7 +44,7 @@ export type RacketRow = {
 };
 
 
-
+//json형태로 db에 올리는 타입
 export type RacketCrawlInput = {
     /** 필수 필드 */
     name: string;           // 라켓 이름
@@ -77,6 +77,8 @@ export type RacketCrawlInput = {
     crawledAt: string;
 };
 
+
+//정규화한 데이터
 export type NormalizedRacketInput = {
     name: string;
     brandName: string;
@@ -84,6 +86,26 @@ export type NormalizedRacketInput = {
     note: string | null;
     variants: Omit<RacketVariant, "id">[];
 };
+
+//default 라켓을 기준으로 만들어진 라켓 타입
+export type RacketFormValues = {
+    // 라켓 기본 정보
+    name: string;
+    brandName: string | null;
+    seriesName: string | null;
+    note: string | null;
+
+    // variant 기본값 (isDefault = true)
+    weight: number | null;
+    weightCategory: string | null;
+    balanceType: string | null;
+    shaft: number | null;
+    gripSize: string | null;
+    maxTension: number | null;
+    price: number | null;
+    color: string | null;
+};
+
 
 
 

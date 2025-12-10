@@ -13,7 +13,7 @@ export default function AdminLayout({
     const pathname = usePathname();
 
     const menu = [
-        { name: "대시보드", href: "/admin" },
+        { name: "크롤링 데이터 업로드", href: "/admin/rackets/import" },
         { name: "라켓 관리", href: "/admin/rackets" },
     ];
 

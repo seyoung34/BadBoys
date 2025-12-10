@@ -54,10 +54,7 @@ function extractLength(v: string | null | undefined): number | null {
     return m ? Number(m[1]) : null;
 }
 
-
-// ------------------------------------------------------
-// ✨ RacketRow를 목표로 하는 Normalized 데이터 생성 함수
-// ------------------------------------------------------
+//
 export async function processRacketJson(input: RacketCrawlInput): Promise<NormalizedRacketInput> {
 
 

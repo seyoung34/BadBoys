@@ -1,15 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import type { RacketRow } from "@/app/lib/types";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
-
-export type RacketFormValues = Omit<RacketRow, "id" | "mainImage" | "tags">;
+import type { RacketFormValues } from "@/app/lib/types";
 
 interface Props {
-    initial?: RacketFormValues | null;    // 수정 시 전달
+    initial?: RacketFormValues | null;
     onSubmit: (values: RacketFormValues) => Promise<void>;
     submitText?: string;
 }
@@ -18,27 +16,26 @@ export function RacketForm({ initial, onSubmit, submitText = "저장" }: Props) 
     const [values, setValues] = useState<RacketFormValues>(
         initial ?? {
             name: "",
+            brandName: "",
+            seriesName: "",
+            note: "",
+
             weight: null,
             weightCategory: "",
             balanceType: "",
-            length: null,
-            maxTension: null,
-            playStyle: "",
-            price: null,
-            gripSize: "",
             shaft: null,
-            linkURL: "",
-            note: "",
-            brandName: "",
-            seriesName: "",
+            gripSize: "",
+            maxTension: null,
+            price: null,
+            color: "",
         }
     );
 
-    const handleChange = (key: keyof RacketFormValues, value: string | number | null) => {
-        setValues((prev) => ({
-            ...prev,
-            [key]: value,
-        }));
+    const handleChange = (
+        key: keyof RacketFormValues,
+        value: string | number | null
+    ) => {
+        setValues(prev => ({ ...prev, [key]: value }));
     };
 
     async function handleSubmit(e: React.FormEvent) {
@@ -48,7 +45,10 @@ export function RacketForm({ initial, onSubmit, submitText = "저장" }: Props) 
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
-            {/* 이름 */}
+
+            {/* ---------------------- */}
+            {/* 기본 라켓 정보 */}
+            {/* ---------------------- */}
             <div>
                 <Label>라켓 이름</Label>
                 <Input
@@ -58,7 +58,6 @@ export function RacketForm({ initial, onSubmit, submitText = "저장" }: Props) 
                 />
             </div>
 
-            {/* 브랜드 */}
             <div>
                 <Label>브랜드</Label>
                 <Input
@@ -68,7 +67,6 @@ export function RacketForm({ initial, onSubmit, submitText = "저장" }: Props) 
                 />
             </div>
 
-            {/* 시리즈 */}
             <div>
                 <Label>시리즈</Label>
                 <Input
@@ -77,7 +75,20 @@ export function RacketForm({ initial, onSubmit, submitText = "저장" }: Props) 
                 />
             </div>
 
-            {/* 무게 */}
+            <div>
+                <Label>비고 (설명)</Label>
+                <textarea
+                    value={values.note ?? ""}
+                    onChange={(e) => handleChange("note", e.target.value)}
+                    className="w-full border rounded p-2"
+                    rows={4}
+                />
+            </div>
+
+            {/* ---------------------- */}
+            {/* 기본 Variant 정보 */}
+            {/* ---------------------- */}
+
             <div>
                 <Label>무게 (g)</Label>
                 <Input
@@ -87,7 +98,51 @@ export function RacketForm({ initial, onSubmit, submitText = "저장" }: Props) 
                 />
             </div>
 
-            {/* 가격 */}
+            <div>
+                <Label>무게 분류</Label>
+                <Input
+                    type="text"
+                    value={values.weightCategory ?? ""}
+                    onChange={(e) => handleChange("weightCategory", e.target.value)}
+                />
+            </div>
+
+            <div>
+                <Label>밸런스 타입</Label>
+                <Input
+                    type="text"
+                    value={values.balanceType ?? ""}
+                    onChange={(e) => handleChange("balanceType", e.target.value)}
+                />
+            </div>
+
+            <div>
+                <Label>샤프트 강성</Label>
+                <Input
+                    type="number"
+                    value={values.shaft ?? ""}
+                    onChange={(e) => handleChange("shaft", Number(e.target.value))}
+                />
+            </div>
+
+            <div>
+                <Label>그립 사이즈</Label>
+                <Input
+                    type="text"
+                    value={values.gripSize ?? ""}
+                    onChange={(e) => handleChange("gripSize", e.target.value)}
+                />
+            </div>
+
+            <div>
+                <Label>최대 텐션</Label>
+                <Input
+                    type="number"
+                    value={values.maxTension ?? ""}
+                    onChange={(e) => handleChange("maxTension", Number(e.target.value))}
+                />
+            </div>
+
             <div>
                 <Label>가격</Label>
                 <Input
@@ -97,28 +152,18 @@ export function RacketForm({ initial, onSubmit, submitText = "저장" }: Props) 
                 />
             </div>
 
-            {/* 링크 */}
             <div>
-                <Label>공식 링크(URL)</Label>
+                <Label>색상</Label>
                 <Input
-                    type="text"
-                    value={values.linkURL ?? ""}
-                    onChange={(e) => handleChange("linkURL", e.target.value)}
+                    value={values.color ?? ""}
+                    onChange={(e) => handleChange("color", e.target.value)}
                 />
             </div>
 
-            {/* 비고 */}
-            <div>
-                <Label>비고</Label>
-                <textarea
-                    value={values.note ?? ""}
-                    onChange={(e) => handleChange("note", e.target.value)}
-                    className="w-full border rounded p-2"
-                    rows={4}
-                />
-            </div>
-
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
                 {submitText}
             </Button>
         </form>

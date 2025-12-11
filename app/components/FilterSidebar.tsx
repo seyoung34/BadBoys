@@ -9,8 +9,17 @@ import { X } from "lucide-react";
 import { useMemo } from "react";
 import { RacketRow } from "../lib/types";
 
+import { Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider
+} from "@/app/components/ui/tooltip";
+
 export interface FilterState {
   brands: string[];
+  series: string[];
   maxPrice: number;
   weightCategories: string[];
   balanceTypes: string[];
@@ -44,6 +53,19 @@ export function FilterSidebar({
         new Set(
           rackets
             .map((r) => r.brandName)
+            .filter((v): v is string => Boolean(v))
+        )
+      ),
+    [rackets]
+  );
+
+  //시리즈
+  const seriesOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          rackets
+            .map((r) => r.seriesName)
             .filter((v): v is string => Boolean(v))
         )
       ),
@@ -116,6 +138,7 @@ export function FilterSidebar({
   const clearFilters = () => {
     setFilters({
       brands: [],
+      series: [],
       maxPrice: 500000,
       weightCategories: [],
       balanceTypes: [],
@@ -183,8 +206,40 @@ export function FilterSidebar({
 
       <Separator className="my-6" />
 
+      {/* 시리즈 */}
+      <Label className="text-sm font-semibold block mb-3">시리즈</Label>
+      {seriesOptions.map((series) => (
+        <div key={series} className="flex items-center space-x-2 mb-2">
+          <Checkbox
+            checked={filters.series.includes(series)}
+            onCheckedChange={() => toggleArrayFilter("series", series)}
+          />
+          <span className="text-sm text-slate-600">{series}</span>
+        </div>
+      ))}
+
+      <Separator className="my-6" />
+
       {/* 무게 */}
-      <Label className="text-sm font-semibold block mb-3">무게</Label>
+      <Label className="text-sm font-semibold block mb-3">무게
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button className="ml-2 text-slate-400 hover:text-slate-600">
+                <Info className="h-4 w-4" />
+              </button>
+            </TooltipTrigger>
+
+            <TooltipContent>
+              <p className="text-xs">
+                5U = 75~80g<br />
+                4U = 80~85g<br />
+                3U = 85~90g<br />
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </Label>
       <div className="flex flex-wrap gap-2">
         {weightOptions.map((w) => (
           <button

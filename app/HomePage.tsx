@@ -21,6 +21,7 @@ export default function HomePage({ rackets }: Props) {
     const [sortOption, setSortOption] = useState("featured");
     const [filters, setFilters] = useState<FilterState>({
         brands: [],
+        series: [],
         maxPrice: 500000,
         weightCategories: [],
         balanceTypes: [],
@@ -67,6 +68,13 @@ export default function HomePage({ rackets }: Props) {
                 filters.brands.includes(r.brandName ?? "");
 
             // =============================================
+            // 시리즈 필터
+            // =============================================
+            const matchesSeriesFilter =
+                filters.series.length === 0 ||
+                filters.series.includes(r.seriesName ?? "");
+
+            // =============================================
             // 가격 필터 (variant.price 중 하나라도 조건 충족)
             // =============================================
             const matchesPrice = r.variants.some(
@@ -103,6 +111,7 @@ export default function HomePage({ rackets }: Props) {
             return (
                 matchesSearch &&
                 matchesBrand &&
+                matchesSeriesFilter &&
                 matchesPrice &&
                 matchesWeightCategory &&
                 matchesBalance &&
@@ -243,6 +252,7 @@ export default function HomePage({ rackets }: Props) {
                                         setFilters({
                                             brands: [],
                                             maxPrice: 500000,
+                                            series: [],
                                             weightCategories: [],
                                             balanceTypes: [],
                                             stiffness: []

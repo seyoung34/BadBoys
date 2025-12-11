@@ -28,11 +28,11 @@ export default function AdminRacketListPage() {
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-2xl font-bold">라켓 관리</h1>
 
-                <Link href="/admin/rackets/new">
+                {/* <Link href="/admin/rackets/new">
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                         + 새 라켓 추가
                     </Button>
-                </Link>
+                </Link> */}
             </div>
 
             <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">

@@ -4,7 +4,7 @@ import { supabase } from "@/app/lib/supabaseClient";
 import {
     NormalizedRacketInput,
     RacketCrawlInput
-} from "../../../lib/types";
+} from "../../lib/types";
 
 
 // ------------------------------

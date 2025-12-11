@@ -85,9 +85,9 @@ export default function AdminRacketListPage() {
 
                                     {/* 대표 이미지 */}
                                     <td className="px-4 py-3">
-                                        {r.mainImage?.url ? (
+                                        {r.mainImage?.linkURL ? (
                                             <img
-                                                src={r.mainImage.url}
+                                                src={r.mainImage.linkURL}
                                                 className="w-16 h-16 object-cover rounded border"
                                                 alt={r.mainImage.alt ?? ""}
                                             />

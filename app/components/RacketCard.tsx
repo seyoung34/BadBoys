@@ -1,5 +1,5 @@
 
-import type { RacketRow } from "../lib/types";
+import type { RacketRow, RacketVariant } from "../lib/types";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -12,8 +12,7 @@ interface RacketCardProps {
 
 export function RacketCard({ racket, onClick }: RacketCardProps) {
 
-  console.log(`${racket.name} : `);
-  console.log(racket);
+  const defaultRacket: RacketVariant = racket.variants.find(r => r.isDefault === true) ?? racket.variants[0];
 
   return (
     <Card
@@ -23,7 +22,7 @@ export function RacketCard({ racket, onClick }: RacketCardProps) {
 
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-50">
         <img
-          src={racket.mainImage?.url ?? "https://images.unsplash.com/photo-1716155249759-b5f068f74e63?q=80&w=800&auto=format&fit=crop"}
+          src={racket.mainImage?.linkURL ?? "https://images.unsplash.com/photo-1716155249759-b5f068f74e63?q=80&w=800&auto=format&fit=crop"}
           alt={racket.name}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 mix-blend-multiply opacity-90 group-hover:opacity-100"
         />
@@ -37,7 +36,7 @@ export function RacketCard({ racket, onClick }: RacketCardProps) {
       <CardHeader className="p-4 pb-2 space-y-1">
         <div className="flex justify-between items-center w-full">
           <p className="text-xs font-semibold text-blue-600 tracking-wide uppercase">{racket.brandName}</p>
-          <span className="font-bold text-slate-900">{racket.price?.toLocaleString()}원</span>
+          <span className="font-bold text-slate-900">{defaultRacket.price?.toLocaleString()}원</span>
         </div>
         <h3 className="font-bold text-lg text-slate-900 leading-tight group-hover:text-blue-700 transition-colors">{racket.name}</h3>
       </CardHeader>
@@ -45,13 +44,13 @@ export function RacketCard({ racket, onClick }: RacketCardProps) {
       <CardContent className="p-4 pt-2">
         <div className="flex flex-wrap gap-1.5">
           <Badge variant="secondary" className="px-2 py-0.5 text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
-            {racket.weight}
+            {defaultRacket.weight}
           </Badge>
           <Badge variant="secondary" className="px-2 py-0.5 text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
-            {racket.balanceType}
+            {defaultRacket.balanceType}
           </Badge>
           <Badge variant="secondary" className="px-2 py-0.5 text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200">
-            {racket.shaft}
+            {defaultRacket.shaft}
           </Badge>
         </div>
       </CardContent>

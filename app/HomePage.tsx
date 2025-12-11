@@ -117,6 +117,8 @@ export default function HomePage({ rackets }: Props) {
     const sortedRackets = useMemo(() => {
         const list = [...filteredRackets];
 
+        console.table(list);
+
         switch (sortOption) {
             case "price-asc":
                 return list.sort((a, b) => {

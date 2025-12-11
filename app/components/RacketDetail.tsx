@@ -14,6 +14,8 @@ interface RacketDetailProps {
 export function RacketDetail({ racket, open, onOpenChange }: RacketDetailProps) {
   if (!racket) return null;
 
+  const defaultRacket = racket.variants.find(r => r.isDefault === true) ?? racket.variants[0];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl p-0 overflow-hidden bg-white gap-0">
@@ -52,19 +54,19 @@ export function RacketDetail({ racket, open, onOpenChange }: RacketDetailProps) 
               <div className="space-y-3 mb-8">
                 <div className="flex justify-between items-center py-2 border-b border-slate-100">
                   <span className="text-sm text-slate-500">무게</span>
-                  <span className="font-semibold text-slate-900 text-sm">{racket.weightCategory}</span>
+                  <span className="font-semibold text-slate-900 text-sm">{defaultRacket.weightCategory}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-slate-100">
                   <span className="text-sm text-slate-500">밸런스</span>
-                  <span className="font-semibold text-slate-900 text-sm">{racket.balanceType}</span>
+                  <span className="font-semibold text-slate-900 text-sm">{defaultRacket.balanceType}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-slate-100">
                   <span className="text-sm text-slate-500">샤프트 강성</span>
-                  <span className="font-semibold text-slate-900 text-sm">{racket.shaft}</span>
+                  <span className="font-semibold text-slate-900 text-sm">{defaultRacket.shaft}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-slate-100">
                   <span className="text-sm text-slate-500">가격</span>
-                  <span className="font-bold text-slate-900 text-xl">{racket.price?.toLocaleString()}원</span>
+                  <span className="font-bold text-slate-900 text-xl">{defaultRacket.price?.toLocaleString()}원</span>
                 </div>
               </div>
 

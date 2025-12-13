@@ -27,12 +27,13 @@ export type RacketVariant = {
     isDefault: boolean;
 };
 
+//fetch 받아올 때의 타입
 export type RacketRow = {
     id: number;
     name: string;
     note: string | null;
 
-    brandName: string | null;
+    brandName: string;
     seriesName: string | null;
 
     variants: RacketVariant[];
@@ -92,7 +93,7 @@ export type NormalizedRacketInput = {
 export type RacketFormValues = {
     // 라켓 기본 정보
     name: string;
-    brandName: string | null;
+    brandName: string;
     seriesName: string | null;
     note: string | null;
 

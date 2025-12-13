@@ -16,6 +16,7 @@ import type { NormalizedRacketInput, RacketCrawlInput } from "@/app/lib/types";
 import { groupByRacketName } from "./groupByName";
 import { RacketVariantCard } from "./RacketVariantCard";
 import type { EditableRacketGroup } from "./types";
+import Link from "next/link";
 
 
 
@@ -126,8 +127,7 @@ export default function UploadRacketPage() {
             <h1 className="text-2xl font-bold">라켓 CSV / JSON 업로드</h1>
 
             {/* CSV 파일 업로드 */}
-            <div>
-                {/* <label className="font-semibold mb-2 border border-slate-300 hover:bg-blue-50 rounded-2xl p-2 mr-2">CSV 파일 업로드</label> */}
+            <div className="justify-between items-cente  flex pr-6">
                 <input
                     className="font-semibold mb-2 border border-slate-300 hover:bg-blue-50 rounded-2xl p-2"
                     type="file"
@@ -137,6 +137,9 @@ export default function UploadRacketPage() {
                         if (file) handleCsvFileUpload(file);
                     }}
                 />
+                <Link href={`/admin/upload/new`}>
+                    <Button className="bg-slate-600 hover:bg-slate-900">수동 라켓 추가</Button>
+                </Link>
             </div>
 
             {/* JSON / CSV 텍스트 입력 */}

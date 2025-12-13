@@ -8,7 +8,7 @@ import { fetchRackets } from "@/app/lib/rackets";
 import { supabase } from "@/app/lib/supabaseClient";
 
 import type { RacketRow, RacketFormValues } from "@/app/lib/types";
-import { RacketForm } from "../../components/RacketForm";   // UI Form
+import { RacketForm } from "../../../components/RacketForm";   // UI Form
 
 // -----------------------------------------------
 // RacketRow → RacketFormValues 변환

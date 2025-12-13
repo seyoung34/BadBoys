@@ -1,6 +1,6 @@
 "use client";
 
-import { RacketImageManager } from "../../components/RacketImageManager";
+import { RacketImageManager } from "../../../components/RacketImageManager";
 import { useParams } from "next/navigation";
 
 export default function RacketImagesPage() {

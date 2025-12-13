@@ -14,7 +14,7 @@ export default function AdminLayout({
     const pathname = usePathname();
 
     const menu = [
-        { name: "크롤링 데이터 업로드", href: "/admin/upload" },
+        { name: "라켓 추가", href: "/admin/upload" },
         { name: "라켓 관리", href: "/admin/rackets" },
     ];
 

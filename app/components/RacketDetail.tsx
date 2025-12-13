@@ -18,7 +18,7 @@ export function RacketDetail({ racket, open, onOpenChange }: RacketDetailProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl p-0 overflow-hidden bg-white gap-0">
+      <DialogContent className="w-[90vw] max-w-[1000px] sm:max-w-[1000px] h-[90vh] p-0 overflow-hidden bg-white gap-0">
         <div className="grid md:grid-cols-2 gap-0">
 
           <div className="bg-slate-50 p-4 flex items-center justify-center relative">

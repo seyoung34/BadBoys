@@ -27,12 +27,6 @@ export default function AdminRacketListPage() {
         <div>
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-2xl font-bold">라켓 관리</h1>
-
-                {/* <Link href="/admin/rackets/new">
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                        + 새 라켓 추가
-                    </Button>
-                </Link> */}
             </div>
 
             <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
@@ -56,6 +50,8 @@ export default function AdminRacketListPage() {
                         {rackets.map((r) => {
                             const variant: RacketVariant | undefined =
                                 r.variants.find(v => v.isDefault);
+
+                            console.table(r.variants);
 
                             return (
                                 <tr key={r.id} className="border-b border-slate-200 last:border-none">

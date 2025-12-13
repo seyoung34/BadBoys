@@ -7,6 +7,7 @@ import {
   RacketImage,
   RacketTag
 } from "./types";
+import { mapDbToRacketImage, type ImageRow } from "@/app/lib/convertDB"
 
 export async function fetchRackets(): Promise<RacketRow[]> {
   const { data, error } = await supabase
@@ -22,7 +23,8 @@ export async function fetchRackets(): Promise<RacketRow[]> {
   const camel = toCamel(data) as Record<string, unknown>[];
 
   return camel.map((r) => {
-    // 안전하게 타입 캐스팅
+
+
     const variants = Array.isArray(r.variants)
       ? (r.variants as RacketVariant[])
       : [];
@@ -32,12 +34,13 @@ export async function fetchRackets(): Promise<RacketRow[]> {
       : [];
 
     const mainImage = r.mainImage
-      ? (r.mainImage as RacketImage)
+      ? mapDbToRacketImage(r.mainImage as ImageRow)
       : null;
 
     const images = Array.isArray(r.images)
-      ? (r.images as RacketImage[])
-      : undefined; // optional
+      ? r.images.map(mapDbToRacketImage)
+      : undefined;
+
 
     const row: RacketRow = {
       id: r.id as number,

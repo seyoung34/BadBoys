@@ -151,13 +151,13 @@ export function RacketImageManager({ racketId }: Props) {
                 multiple
                 accept="image/*"
                 onChange={handleUpload}
-                className="mb-6"
+                className="mb-6 hover:bg-blue-50 -w-full border-2"
             />
 
             {/* 이미지 리스트 */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
                 {images.map((img) => (
-                    <div key={img.id} className="border rounded p-2 relative">
+                    <div key={img.id} className="border border-slate-300 rounded p-2 relative">
                         <img
                             src={img.linkURL}
                             alt={img.alt ?? ""}
@@ -166,7 +166,7 @@ export function RacketImageManager({ racketId }: Props) {
 
                         <div className="mt-2 flex justify-between items-center">
                             {/* 라디오 버튼 (대표 선택) */}
-                            <label className="flex items-center gap-1 text-sm">
+                            <label className="flex items-center gap-3 text-sm">
                                 <input
                                     type="radio"
                                     name="mainImage"

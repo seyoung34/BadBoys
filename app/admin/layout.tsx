@@ -19,12 +19,14 @@ export default function AdminLayout({
     ];
 
     return (
-        <div className="">
+        <div className="flex flex-col min-h-screen">
             <Header />
-            <div className="min-h-screen flex">
+            <div className="flex flex-1">
                 {/* Sidebar */}
                 <aside className="w-64 bg-slate-900 text-white p-6 flex flex-col gap-4">
-                    <h1 className="text-xl font-bold mb-6">ADMIN</h1>
+                    <Link href={"/admin"}>
+                        <h1 className="text-xl font-bold mb-6">ADMIN</h1>
+                    </Link>
 
                     {menu.map((m) => (
                         <Link
@@ -43,7 +45,7 @@ export default function AdminLayout({
                 </aside>
 
                 {/* Main area */}
-                <main className="flex-1 p-10 bg-slate-50 min-h-screen">{children}</main>
+                <main className="flex-1 p-10 bg-slate-50">{children}</main>
             </div>
         </div>
     );
